@@ -1,0 +1,41 @@
+<br />
+<br />
+<br />
+<div class="well " style="width:80%; margin-left: 10%">
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Auther:</strong>
+  <%= @post.user.display_name %>
+  <h4 style="color: #0033CC">  <%= @post.hits %> views </h4>
+
+</p>
+ <h6>Share post:</h6> <%= social_share_button_tag(@post.content , :popup => "true") %>
+<p>
+    <br>
+  <%= @post.content %>
+</p>
+<div><%= image_tag(@post.attachment_url, :width => 250) if @post.attachment.present? %></div>
+
+  <br/>
+  <br/>
+
+<p>
+
+  <%= link_to 'Back', posts_path, class: 'btn btn-warning' %>
+  <% if user_signed_in? %>
+     | <%= link_to 'Edit', edit_post_path(@post), class: 'btn btn-primary' %> |
+      <%= link_to "Delete", @post,class: 'btn btn-danger', method: :delete, data: { confirm: "Are you sure ?"} %>
+  <% end %>
+</p>
+
+</div>
+<br>
+<br>
+<div id="comments" style=" margin-left: 10%">
+  <h2><%= @post.comments.count %> Comments</h2>
+  <%= render @post.comments %>
+
+  <h3>Add a comment:</h3>
+  <%= render "comments/form" %>
+</div>

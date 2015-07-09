@@ -1,0 +1,16 @@
+<div class="comment clearfix">
+	<div class="comment_content">
+		<p class="comment_name"><strong><%= comment.name %></strong></p>
+		<p class="comment_body"><%= comment.body %></p>
+		<p class="comment_time"><%= comment.created_at.to_s(:long) %></p>
+	</div>
+
+	<% if user_signed_in? %>
+	<p><%= link_to 'Delete', [comment.post, comment],
+								  method: :delete,
+                                  class: 'btn btn-danger',
+								 	data: { confirm: 'Are you sure?' } %></p>
+ 	<% end %>
+  <br/>
+  <br/>
+</div>

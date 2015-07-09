@@ -1,0 +1,29 @@
+<%= simple_form_for(@post, :html => { :multipart => true, class: "form-horizontal"}) do |f| %>
+  <% if @post.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@post.errors.count, "error") %> prohibited this post from being saved:</h2>
+
+      <ul>
+      <% @post.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+    <br />
+    <br />
+    <br />
+    <%= f.select :tag_list, [ 'Pictures', 'Videos', 'Locations' ],  :prompt => 'Select One Category' %>
+    <br />
+    <br />
+    <%= f.input :content, :input_html => {:style => 'height: 200px; width: 400px; ' } %>
+    <br />
+    <br />
+    <%= f.input :attachment, as: :file %>
+
+
+  <div class="form-actions">
+    <%= f.button :submit, class: 'btn btn-success'%>
+  </div>
+<% end %>

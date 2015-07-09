@@ -1,0 +1,163 @@
+1. post_author
+	author_id
+	First_name
+	Last_name
+	Display_name
+2. blog_post
+	post_id
+	Date_published
+	comments_enabled
+	post_text
+	author_id	(views_controller)
+3. post_category
+	post_category_id
+	videos
+	pictures
+	location
+
+4. Comments
+	comment_id
+	comment_date
+	user_name(display_name)
+	post_id
+
+=========================================
+> rails new blog
+
+> cd blog
+
+> bundle install
+
+> rails g controller posts
+
+then set config/routes.rb file
+	resources :posts
+	root "posts#index"
+
+then set posts_controller file
+
+def create
+    @post = current_user.posts.new(post_params) (this will create post with user_id)
+    @post.save
+end
+
+  def update
+    @post = current_user.posts.find(params[:id]) (tjis will find post_id and update that)
+
+    if params[:post] && params[:post].has_key?(:user_id)
+      params[:post].delete(:user_id)
+  end
+
+
+
+and view/posts
+	_form.html.erb
+
+	<%= simple_form_for(@post, :html => { :multipart => true, class: "form-horizontal"}) do |f| %> #this is for full form
+      <% if @post.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(@post.errors.count, "error") %> prohibited this post from being saved:</h2>
+
+          <ul>
+          <% @post.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+        <%= f.select :tag_list, [ 'Pictures', 'Videos', 'Locations' ],  :prompt => 'Select One Category' %>
+
+        <%= f.input :content, :input_html => {:style => 'height: 200px; width: 400px; ' } %>
+
+        <%= f.input :attachment, as: :file %>
+
+
+      <div class="form-actions">
+        <%= f.button :submit, class: 'btn btn-success'%>
+      </div>
+    <% end %>
+
+
+
+
+	edit.html.erb
+
+
+
+
+
+	index.html.erb (here just irretrate over your model)
+	<% @posts.each do |post| %>
+	<% end %>
+
+	new.html.erb
+	show.html.erb
+
+
+#now set up model(database)
+
+> rails g model Post content:text  (creating a database )
+
+> rake db:migrate
+
+set up validation on models/post.rb (this line of code just valided your content and minimum 2 leter)
+	  validates :content , :presence => true,
+                            :length => { minimum: 2 }
+
+
+2. Now create a controller for comment:
+
+
+> rails g controller Comments
+
+and create a model for comment:
+
+> rails g model Comment name body:text post:references
+
+create views/comments:
+<%= comment.created_at.to_s(:long) %> (this line of code make show time)
+
+
+
+
+3. add gem 'devise' to your gemfile
+
+>bundle install  (it bundle your gemfile and create update Gemfile.lock)
+
+>rails generate devise:install (it will set your user model and for authentication)
+
+see the instraction on cmd
+
+>rails g devise:views
+
+>rails generate devise User
+
+>rake db:migrate
+
+>rails g migration AddFieldsToUsers first_name last_name display_name
+
+>rails g migration AddUserIdToPosts user_id:integer
+
+
+#for picture uploading
+add gem 'carrierwave'
+>rails generate uploader Attachment
+>rails g migration add_attachment_to_posts attachment:string
+>rake db:migrate
+the add.....
+class Posts < ActiveRecord::Base
+  mount_uploader :attachment, AttachmentUploader
+end
+
+
+>rails g controller Profile show
+
+
+add gem 'simple_form' (for your form that make easy and better)
+
+>rails generate simple_form:install
+
+>rails g controller About
+>rails g controller Contact
+and create a veiw page for it
